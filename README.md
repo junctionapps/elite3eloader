@@ -13,7 +13,7 @@ This is a web based application meant to be run on the local machine (not a serv
     - Open a command prompt (press Windows Key + R, then type in `cmd`)
     - Change directory to where you extracted the repo `cd c:\dev\elite3eloader-master`
     - Create a Python 3.7 virtual environment by typing `python -m venv venv` This may take a few moments.
-    - If you get an error on the above line, or had an older version of python installed you may need to specify the path to Python 3.7 like: `c:\Python\    Python37\python -m venv venv` (do this while still in the `c:\dev\elite3eloader-master` directory) substituting the path to where ever you installed Python 3.7 (it may be in your c:\users\youruser\appdata\local....). 
+    - If you get an error on the above line, or had an older version of python installed you may need to specify the path to Python 3.7 like: `c:\Python\Python37\python -m venv venv` (do this while still in the `c:\dev\elite3eloader-master` directory) substituting the path to where ever you installed Python 3.7 (it may be in your c:\users\youruser\appdata\local....). 
  
 4. Activate Virtual environment
     - at this point if you type `dir` you should see two folders in c:\dev\elite3eloader-master: (1) `venv` and (2) `elite3eloader-master`. We need to run a script in the virtual environment to activate it. 
@@ -21,7 +21,7 @@ This is a web based application meant to be run on the local machine (not a serv
 
 5. There are a number of libraries we'll need to download to make the application work. You can examine them in the elite3eloader-master\requirements.txt file if you want to take a peek, or install them now by typing `pip install -r elite3eloader-master\proj\requirements.txt` Expect this to take a few moments.
 
-6. Hoping everything is going well. Now. we need to create a folder to store some static files. Create two folders under cdn to house these static folders: `mkdir elite3eloader-master\cdn\media` and `mkdir elite3eloader-master\cdn\static`. If you were look inside of the `c:\dev\elite3eloader-master\elite3eloader-master` folder now you should see folders `cdn`, `proj`, `docs`, `venv`, and files named `initial.json` and `README.md` (this file).
+6. Hoping everything is going well. Now. we need to create a folder to store some static files. Create two folders under cdn to house these static folders: `mkdir elite3eloader-master\cdn\media` and `mkdir elite3eloader-master\cdn\static`. If you were to look inside of the `c:\dev\elite3eloader-master\elite3eloader-master` folder now you should see folders `cdn`, `proj`, `docs`, `venv`, and files named `initial.json` and `README.md` (this file).
 
 7. We need to change into the c:\dev\elite3eloader-master\elite3eloader-master\proj folder. Do that by typing `cd c:\dev\elite3eloader-master\elite3eloader-master\proj`. Now run `python manage.py collectstatic`. You should see a line like `122 static files copied to 'c:\dev\elite3eloader-master\elite3eloader-master\cdn\static`. This moves some files out of the proj folder and into an area for our server to serve them.
 
