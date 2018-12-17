@@ -13,7 +13,9 @@ from junction.loaders.models import Loader, Attribute, LoaderXOQL, History
 
 
 def build_credentials(server=None):
-    credentials = {}
+    credentials = {'domain': None,
+                    'username': None,
+                    'password': None,}
     if all([server.domain,
             server.username,
             server.password]):
