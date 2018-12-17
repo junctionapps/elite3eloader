@@ -19,4 +19,4 @@ I decided to ship the app with a debug setting on which results in a page full o
 If everything did go correctly, you should be able to view a new entry in your 3E action list ready to submit (or cancel). If not, use the [GitHub Issues](https://github.com/junctionapps/elite3eloader/issues) feature to describe what went wrong and I'll do my best to assist.
 
 ## Screenshots
-Look through the [docs](/docs) folder for some screenshots.
+Look through the [Screenshots](SCREENSHOTS.md) for a quick graphical tour.
