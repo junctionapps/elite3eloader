@@ -1,4 +1,3 @@
-![Screenshot](./docs/screenshot001.png?raw=true)
 ![Screenshot](./docs/screenshot_license.png?raw=true)
 ![Screenshot](./docs/screenshot_welcome.png?raw=true)
 ![Screenshot](./docs/screenshot_loader_empty.png?raw=true)
