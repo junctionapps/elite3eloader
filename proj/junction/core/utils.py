@@ -45,7 +45,7 @@ class Elite3eServices():
         elif os.name == "nt":
             session = Session()
             session.auth = HttpNegotiateAuth()
-            self.client = Client(wsdl)
+            self.client = Client(wsdl, transport=Transport(session=session))
         else:
             raise Exception("You must be on Windows in a Windows network, or provide username, password and domain")
 
