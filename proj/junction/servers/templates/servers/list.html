@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{#https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-form-manually.html#}
+{% block main_content_card_body %}
+
+  <div class="row">
+    <div class="col-md-9">
+      <table class="table table-hover">
+        <thead class=" text-primary">
+        <tr>
+          <th>
+            Name
+          </th>
+          <th>
+            Protocol
+          </th>
+          <th>
+            WAPI
+          </th>
+          <th>
+            Instance
+          </th>
+          <th>
+            Credentials
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for server in servers %}
+        <tr {% if server.pk == selected_server %}class="table-active"{% endif %}>
+          <td><strong><a href="{% url "servers:server_edit" server.slug %}">{{ server.name }}</a></strong></td>
+          <td>{{ server.protocol }}</td>
+          <td>{{ server.wapi }}</td>
+          <td>{{ server.instance }}</td>
+          <td>{{ server.credentials }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-3">
+    <h6 >{% if selected_server %}Edit{% else %}Add{% endif %} Server</h6>
+      <form method="post" action="{{ form_action }}" autocomplete="off">
+        {% csrf_token %}
+        {% include 'core/bs4_form.html' with form=server_form %}
+        <div class="">
+          <button type="submit" class="btn btn-primary btn-round">{% if selected_server %}Update{% else %}Add{% endif %}</button>
+        {% if selected_server %}
+          <button name="btn-cancel" type="submit" class="btn btn-warning btn-round">Cancel</button>
+          <button name="btn-archive" type="submit" class="btn btn-danger btn-round">Archive</button>
+        {% endif %}
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

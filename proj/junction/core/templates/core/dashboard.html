@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block main_content_card_body %}
+  <p>This is fairly quick first pass at putting together a data loader for Elite 3E. It has
+    been tested on 2.8.3 but may work for versions back to 2.6. Limited functional testing has
+    been completed, however, as everyone's setup is a little bit different, I expect some
+    issues will arise. Report issues through the Github repository. </p>
+  <p> This was a quick first pass at this and is meant more as a proof of concept than finished software.
+    There is definitely room for improvement.</p>
+  <p>Create the servers (UAT, PROD, DEV). If you leave the domain, username &amp: password blank and are
+    running this app on your local machine, your local credentials will be used, otherwise the app will use the
+    credentials entered on the server setup. </p>
+  <p>Create loaders for
+    anything you need to load data into. For an example, the app will ship with one loader
+    which adds some vendors (which could be useful after a merger). </p>
+  <p>You can create as many loaders as you like. First create the loader and provide the basic
+    info, then add the attributes as needed. You can create loaders which create top level objects,
+    or edit existing top level objects (you cannot mix and match in one loader). </p>
+  <p>This application is meant to be run locally by the user doing the updates. It can be
+    configured to be hosted on a proper server, but then we get into having to either ask for
+    network passwords, or operate as a system account. Running locally on a user's workstation
+    allows us to make the requests on that user's behalf and be restricted to that user's
+    permissions (unless the credentials are provided in the server setup). Passwords entered in the
+    server setup are not encrypted.</p>
+
+
+{% endblock %}

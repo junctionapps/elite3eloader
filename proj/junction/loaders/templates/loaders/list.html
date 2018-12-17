@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{#https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-form-manually.html#}
+
+{% block main_card_header_buttons %}
+  <a href="{% url "loaders:loader_edit" %}" class="btn btn-primary btn-round">Add</a>
+
+{% endblock %}
+
+{% block main_content_card_body %}
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table table-hover">
+        <thead class=" text-primary">
+        <tr>
+          <th>
+            Name
+          </th>
+          <th>
+            Process
+          </th>
+
+          <th>
+            Parent Object
+          </th>
+          <th>
+            Parent Action
+          </th>
+          <th>
+            Child Object
+          </th>
+          <th>
+            Child Action
+          </th>
+
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for loader in loaders %}
+          <tr {% if loader.pk == selected_loader %}class="table-active"{% endif %}>
+            <td><strong><a href="{% url "loaders:loader_edit" loader.slug %}" title="{{ loader.description }}">{{ loader.name }}</a></strong></td>
+            <td>{{ loader.process }}</td>
+            <td>{{ loader.parent_object }}</td>
+            <td>{{ loader.parent_action }}</td>
+            <td>{{ loader.child_object|default_if_none:'' }}</td>
+            <td>{{ loader.child_action|default_if_none:'' }}</td>
+
+
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+{% endblock %}

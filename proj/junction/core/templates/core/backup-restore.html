@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block main_content_card_body %}
+<dl>
+<dt>Backup</dt>
+<dd>
+<p>This will create a file in JSON format storing all of the server, loaders, and core configurations. </p><p>Save this file in a place other than the directory of this application. We'll use the file after an update to restore any loaders you have created.</p>
+<a class="btn btn-primary" href="{% url "backup_create" %}">Backup</a></dd>
+
+<dt>Restore</dt>
+<dd>
+  <p>Select a previously created backup to restore data from and press restore. <strong>This will overwrite existing data.</strong></p>
+  {% if error_text %}
+    <div class="alert alert-danger row" role="alert">
+    <div class="col-sm-2"><i class="fas fa-exclamation-circle fa-5x"></i></div>
+      <div class="col-sm-10"><strong>{{ error_text.0 }}</strong><p>{{ error_text.1 }}</p></div>
+
+    </div>
+  {% endif %}
+  <form method="post" action="{% url "backup" %}" enctype="multipart/form-data">
+  {% csrf_token %}
+  {% include 'core/bs4_form.html' with form=restore_form %}
+  <button type="submit" class="btn btn-warning">Restore</button>
+
+  </form>
+</dd>
+</dl>
+
+
+{% endblock  %}

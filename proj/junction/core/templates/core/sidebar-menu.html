@@ -1,0 +1,35 @@
+<ul class="nav">
+{% if not show_license_form|default_if_none:False %}
+  <li {% if active_side_bar == 'dashboard' %}class="active"{% endif %}>
+    <a href="/">
+      <i class="fas fa-home"></i>
+      <p>Dashboard</p>
+    </a>
+  </li>
+  <li {% if active_side_bar == 'loaders' %}class="active"{% endif %}>
+    <a href="{% url "loaders:loader_list" %}">
+      <i class="fas fa-upload"></i>
+      <p>Loaders</p>
+    </a>
+  </li>
+  <li {% if active_side_bar == 'servers' %}class="active"{% endif %}>
+    <a href="{% url "servers:server_list" %}">
+      <i class="fas fa-server"></i>
+      <p>Servers</p>
+    </a>
+  </li>
+  <li {% if active_side_bar == 'backup' %}class="active"{% endif %}>
+    <a href="{% url "backup" %}">
+      <i class="fas fa-window-restore"></i>
+      <p>Backup/Restore</p>
+    </a>
+  </li>
+{% endif %}
+  <li {% if active_side_bar == 'license' %}class="active"{% endif %}>
+    <a href="{% url "license" %}">
+      <i class="fas fa-file-contract"></i>
+      <p>License</p>
+    </a>
+  </li>
+
+</ul>

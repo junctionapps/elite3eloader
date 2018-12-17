@@ -1,0 +1,29 @@
+{% comment %}
+## THERE IS A BOOTSTRAP LIBRARY TO DO ALMOST THE EXACT SAME THING BUT I DON'T LIKE IT ##
+input type="text"
+       name="{{ form.name.name }}"
+       id="{{ form.name.id_for_label }}"
+       {% if form.name.value != None %}value="{{ form.name.value|stringformat:'s' }}"{% endif %}
+       maxlength="{{ form.name.field.max_length }}"
+       {% if form.name.field.required %}required{% endif %}>
+{% endcomment %}
+{{ form_ctrl }}
+<div class="form-group">
+  <label for="{{ frm_ctrl.id_for_label }}">{{ frm_ctrl.label }}</label>
+  <input type="text"
+         name="{{ frm_ctrl.name }}"
+         id="{{ frm_ctrl.id_for_label }}"
+         maxlength="{{ frm_ctrl.field.max_length }}"
+         class="form-control"
+         {% if frm_ctrl.value != None %}value="{{ frm_ctrl.value|stringformat:'s' }}"{% endif %}
+
+         {% for n, v in frm_ctrl.widget.attrs.items %}
+          {% if v is not False %}
+            {{ n }}{% if v is not True %}="{{ v|stringformat:'s' }}"{% endif %}
+          {% endif %}
+        {% endfor %}
+  >
+  {% if frm_ctrl.help_text %}
+  <small id="{{ frm_ctrl.name }}Help" class="form-text text-muted">{{ frm_ctrl.help_text }}</small>
+  {% endif %}
+</div>

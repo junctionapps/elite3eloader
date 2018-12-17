@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main_content_card_body %}
+  <div class="row">
+    <div class="col-md-12">
+      <h6>Loader</h6>
+      <p><a href="{% url "loaders:loader_edit" history.loader.slug %}">{{ history.loader.name }}</a></p>
+      <p class="text-muted">{{ history.loader.description|default_if_none:"" }}</p>
+      <h6>Run Time</h6>
+      <p>{{ history.submitted }}</p>
+      <h6>Server</h6>
+      <p>{{ history.server }}</p>
+
+      <h6>Data Column Headers</h6>
+      {{ history.column_headers }}
+
+      <h6>Data table</h6>
+      <textarea class="form-control textarea-json" data-wrap="false">{{ history.data }}</textarea>
+
+
+      <h6>Process XML</h6>
+      <textarea class="form-control textarea-xml" data-wrap="false">{{ history.process_xml_pretty }}</textarea>
+
+      <h6>Execute Process Response</h6>
+      <textarea class="textarea-xml" data-wrap="false">{{ history.response_pretty|safe }}</textarea>
+
+
+    </div>
+
+  </div>
+{% endblock %}
+
+
+
+{% block custom_javascript %}
+  <script>
+      $(document).ready(function () {
+          $('.textarea-xml').each(function (index, elem) {
+              CodeMirror.fromTextArea(elem, {
+                  lineWrapping: $(this).data("wrap"),
+                  mode: "xml",
+                  htmlMode: true,
+                  lineNumbers: true
+              });
+          });
+
+          $('.textarea-json').each(function (index, elem) {
+              CodeMirror.fromTextArea(elem, {
+                  lineWrapping: $(this).data("wrap"),
+                  mode: {name: "javascript", json: true},
+                  htmlMode: true,
+                  lineNumbers: true
+              });
+          });
+      });
+  </script>
+{% endblock %}

@@ -1,0 +1,71 @@
+[
+  {
+    "model": "loaders.loader",
+    "pk": 2,
+    "fields": {
+      "name": "Timekeeper HR Number",
+      "description": "Allows for bulk update of HR Number",
+      "active": true,
+      "parent_action": "Edit",
+      "parent_object": "Timekeeper",
+      "child_action": "Add",
+      "child_object": null,
+      "last_run": null,
+      "process": "Timekeeeper",
+      "slug": "timekeeper-hr-number"
+    }
+  },
+  {
+    "model": "loaders.loaderxoql",
+    "pk": 1,
+    "fields": {
+      "loader": 2,
+      "name": "All Active Timekeepers",
+      "description": "Grabs all of the active timekeepers",
+      "xoql": "<SELECT ID=\"SelectStatement\" Class=\"NextGen.Framework.OQL.Symbols.SelectStatement\" xmlns=\"http://elite.com/schemas/query\">\r\n  <OQL_CONTEXT Class=\"NextGen.Framework.Managers.ObjectMgr.ExContextProvider\">\r\n    <NODEMAP ID=\"Timekeeper\" QueryID=\"Timekeeper\" Class=\"NextGen.Application.Query.Timekeeper\" Assembly=\"NextGen.Archetype.Timekeeper\" />\r\n  </OQL_CONTEXT>\r\n  <SELECT_LIST>\r\n    <SINGLE_SELECT Union=\"Distinct\">\r\n      <NODE NodeID=\"Timekeeper\" />\r\n      <VALUES>\r\n        <VALUE>\r\n          <LEAF QueryID=\"Number\" Alias=\"TkprNum\">\r\n            <NODE NodeID=\"Timekeeper\" />\r\n          </LEAF>\r\n        </VALUE>\r\n        <VALUE>\r\n          <LEAF QueryID=\"DisplayName\">\r\n            <NODE NodeID=\"Timekeeper\" />\r\n          </LEAF>\r\n        </VALUE>\r\n        <VALUE>\r\n          <LEAF QueryID=\"HRNumber\">\r\n            <NODE NodeID=\"Timekeeper\" />\r\n          </LEAF>\r\n        </VALUE>\r\n      </VALUES>\r\n      <WHERE>\r\n        <X_IS_EQUAL_TO_Y>\r\n          <X>\r\n            <LEAF QueryID=\"TkprStatus\">\r\n              <NODE NodeID=\"Timekeeper\" />\r\n            </LEAF>\r\n          </X>\r\n          <Y>\r\n            <UNICODE_STRING Value=\"Active\" />\r\n          </Y>\r\n        </X_IS_EQUAL_TO_Y>\r\n      </WHERE>\r\n    </SINGLE_SELECT>\r\n  </SELECT_LIST>\r\n</SELECT>",
+      "slug": "all-active-timekeepers"
+    }
+  },
+  {
+    "model": "loaders.attribute",
+    "pk": 1,
+    "fields": {
+      "loader": 2,
+      "name": "TkprNum",
+      "type": "Parent",
+      "sort": 1,
+      "is_key": true,
+      "alias_field": "Number",
+      "slug": "tkprnum",
+      "active": true
+    }
+  },
+  {
+    "model": "loaders.attribute",
+    "pk": 2,
+    "fields": {
+      "loader": 2,
+      "name": "DisplayName",
+      "type": "Parent",
+      "sort": 2,
+      "is_key": false,
+      "alias_field": null,
+      "slug": "displayname",
+      "active": true
+    }
+  },
+  {
+    "model": "loaders.attribute",
+    "pk": 3,
+    "fields": {
+      "loader": 2,
+      "name": "HRNumber",
+      "type": "Parent",
+      "sort": 3,
+      "is_key": false,
+      "alias_field": null,
+      "slug": "hrnumber",
+      "active": true
+    }
+  }
+]

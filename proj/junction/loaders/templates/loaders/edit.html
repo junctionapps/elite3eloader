@@ -1,0 +1,321 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{#https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-form-manually.html#}
+
+
+{% block main_content_card_body %}
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+    {% if selected_loader %}
+      <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'Run' %}active{% endif %}" id="run-tab" data-toggle="tab" href="#run"
+           role="tab" aria-controls="run"
+           aria-selected="true">Run</a>
+      </li>
+    {% endif %}
+    <li class="nav-item">
+      <a class="nav-link {% if active_tab == 'Configure' %}active{% endif %}" id="configure-tab" data-toggle="tab"
+         href="#configure" role="tab" aria-controls="configure"
+         aria-selected="false">Configure</a>
+    </li>
+    {% if selected_loader %}
+      <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'Attributes' %}active{% endif %}" id="attributes-tab" data-toggle="tab"
+           href="#attributes" role="tab" aria-controls="attributes" aria-selected="false">Attributes</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'Advanced' %}active{% endif %}" id="advanced-tab" data-toggle="tab"
+           href="#advanced" role="tab" aria-controls="advanced" aria-selected="false">Advanced</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'History' %}active{% endif %}" id="history-tab" data-toggle="tab"
+           href="#history" role="tab" aria-controls="history"
+           aria-selected="false">History</a>
+      </li>
+    {% endif %}
+  </ul>
+  <div class="tab-content" id="LoaderTabContent">
+    {% if selected_loader %}
+      <div class="tab-pane fade pt-3 {% if active_tab == 'Run' %}show active{% endif %}" id="run" role="tabpanel"
+           aria-labelledby="run-tab">
+        <form id="id_form_run" method="post" action="{% url "loaders:loader_run" current_loader.slug %}">
+          <div class="row">
+            <div class="col-md-4">
+                {% csrf_token %}
+                {% include 'core/bs4_form.html' with form=history_form %}
+            </div>
+            <div class="col-md-8 text-right">
+              <button id="btn-run-xoql" data-csrf="{{ csrf_token }}" data-action="{% url "loaders:run_xoql" loader_slug=current_loader.slug %}" class="btn btn-secondary btn-round">Load XOQL Data</button>
+              <button id="btn-run" type="submit" class="btn btn-primary btn-round">Run Loader</button>
+            </div>
+          </div>
+        </form>
+        {% if not current_loader.attribute_set.all %}Great job, now visit the attributes tab and add some fields.{% endif %}
+        <div id="hotData"></div>
+      </div>
+    {% endif %}
+    <div class="tab-pane fade pt-3 {% if active_tab == 'Configure' %}show active{% endif %}" id="configure"
+         role="tabpanel"
+         aria-labelledby="configure-tab">
+      <div class="row">
+        <div class="col-md-12 ">
+
+          <form method="post" action="{{ form_action }}">
+            {% csrf_token %}
+            {% include 'core/bs4_form.html' with form=loader_form %}
+            <div class="">
+              <button name="btn-loader-submit" type="submit" class="btn btn-primary btn-round">{% if selected_loader %}
+                Update{% else %}
+                Add{% endif %}</button>
+              {% if selected_loader %}
+                <button name="btn-cancel" type="submit" class="btn btn-warning btn-round">Cancel</button>
+                <button name="btn-archive" type="submit" class="btn btn-danger btn-round">Archive</button>
+              {% endif %}
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+    {% if selected_loader %}
+      <div class="tab-pane fade pt-3 {% if active_tab == 'Attributes' %}show active{% endif %}" id="attributes"
+           role="tabpanel" aria-labelledby="attributes-tab">
+        <div class="row">
+          <div class="col-md-9">
+            <table class="table table-hover">
+              <thead class=" text-primary">
+              <tr>
+                <th>Name</th>
+                <th>Alias Field</th>
+                <th>Type</th>
+              </tr>
+              </thead>
+              <tbody>
+
+              {% for attribute in current_loader.attribute_set.all %}
+                <tr {% if attribute == current_attribute %}class="table-active"{% endif %}>
+                  <td>
+                    {% if attribute.is_key %}<i class="fas fa-key"></i>{% endif %}
+                    <strong><a
+                      href="{% url "loaders:attribute_edit" current_loader.slug attribute.slug %}">{{ attribute.name }}</a></strong>
+                  </td>
+                  <td>{{ attribute.alias_field|default_if_none:'' }}</td>
+                  <td>{{ attribute.type }}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+
+          </div>
+          <div class="col-md-3">
+            <h6>Attributes</h6>
+            <form method="post" action="{{ attribute_form_action }}">
+              {% csrf_token %}
+              {% include 'core/bs4_form.html' with form=attribute_form %}
+              <div class="">
+                <button name="btn-attribute-submit" type="submit" class="btn btn-primary btn-round">
+                  {% if current_attribute.pk %}Update{% else %}Add{% endif %}</button>
+                {% if current_attribute.pk %}
+                  <button name="btn-attribute-cancel" type="submit" class="btn btn-warning btn-round">Cancel</button>
+                  <button name="btn-attribute-remove" type="submit" class="btn btn-danger btn-round">Remove</button>
+                {% endif %}
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade pt-3 {% if active_tab == 'Advanced' %}show active{% endif %}" id="advanced"
+           role="tabpanel" aria-labelledby="advanced-tab">
+        <div class="row">
+          <div class="col-md-4">
+
+            <h6>XOQLs</h6>
+            <table class="table table-hover">
+              <thead class=" text-primary">
+                <tr>
+                  <th>Name</th>
+                  <th>Description</th>
+                </tr>
+                </thead>
+              <tbody>
+              {% for loaderxoql in current_loader.loaderxoql_set.all %}
+                <tr {% if loaderxoql == current_loaderxoql %}class="table-active"{% endif %}>
+                  <td>
+                    <strong><a
+                      href="{% url "loaders:loaderxoql_edit" current_loader.slug loaderxoql.slug %}">{{ loaderxoql.name }}</a></strong>
+                  </td>
+                  <td>{{ loaderxoql.description|default_if_none:'' }}</td>
+                </tr>
+              {% empty %}
+                <tr><td colspan="2">No XOQLs created. Enter the details for the first one in the form to the right. </td></tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div class="col-md-8">
+            <h6>XOQL</h6>
+            <form method="post" action="{{ loaderxoql_form_action }}">
+              {% csrf_token %}
+              {% include 'core/bs4_form.html' with form=loaderxoql_form %}
+              <div class="">
+                <button name="btn-loaderxoql-submit" type="submit" class="btn btn-primary btn-round">
+                  {% if current_loaderxoql.pk %}Update{% else %}Add{% endif %}</button>
+                {% if current_loaderxoql.pk %}
+                  <button name="btn-loaderxoql-cancel" type="submit" class="btn btn-warning btn-round">Cancel</button>
+                  <button name="btn-loaderxoql-remove" type="submit" class="btn btn-danger btn-round">Remove</button>
+                {% endif %}
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade {% if active_tab == 'History' %}show active{% endif %}" id="history" role="tabpanel"
+           aria-labelledby="history-tab">
+
+      <table class="table">
+        <tr>
+          <th>Run Date</th>
+          <th>Server</th>
+          <th>Records</th>
+          <th>3e Result</th>
+          <th>3e Message</th>
+          <th>3e Records</th>
+        </tr>
+        {% for h in current_loader.history_set.all|slice:":10" %}
+        <tr>
+          <td><a href="{% url "loaders:loader_history_request" loader_slug=current_loader.slug pk=h.pk %}">{{ h.submitted }}</a></td>
+          <td>{{ h.server }}</td>
+          <td>{{ h.number_of_records }}</td>
+          <td>{{ h.elite_results|default_if_none:"-" }}</td>
+          <td>{{ h.elite_message|default_if_none:"-" }}</td>
+          <td>{{ h.elite_records|default_if_none:"-" }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      </div>
+    {% endif %}
+  </div>
+
+{% endblock %}
+
+
+{% block custom_javascript %}
+  <!-- HandsonTables -->
+
+  <script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+  <script>
+      $(document).ready(function () {
+
+          var data = [[]];
+          var container1 = document.getElementById('hotData');
+          var hot1 = new Handsontable(container1,
+              {
+                  data: data,
+
+                  minRows: 1,
+                  minCols: {{ current_loader.attribute_set.all.count }},
+                  startRows: 5,
+                  startCols: 5,
+                  stretchH: 'all',
+                  manualRowMove: true,
+                  manualColumnMove: true,
+                  // minSpareRows: 3,
+                  columnSorting: true,
+                  contextMenu: true,
+                  colHeaders: [
+                      {% for attribute in current_loader.attribute_set.all %}'{{ attribute.name }}'{% if not forloop.last %}, {% endif %}{% endfor %}
+                  ]
+              });
+
+          $("#run-tab").on('shown.bs.tab', function () {
+              hot1.render();
+          });
+
+          toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-bottom-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "0",
+            "extendedTimeOut": "0",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+          };
+
+          function loadxoql(csrf, server, xoql, action) {
+              $.ajax({
+                  url: action,
+                  type: "POST",
+
+                  data: {csrfmiddlewaretoken: csrf,
+                         server: server,
+                         xoql: xoql,
+                         },
+                  success: function (data) {
+                      console.log(data);
+                      if (data.errors) {
+                          toastr["error"](data.errors)
+                      } else {
+                          hot1.loadData(data.data);
+                      }
+                  }
+              });
+          }
+
+          $("#btn-run-xoql").on('click', function(e) {
+              e.preventDefault();
+              // show_loading_modal();
+              let csrf = $(this).data("csrf");
+
+              let server = $("#id_server").find(":selected").val();
+              let xoql = $("#id_xoql").find(":selected").val();
+              let action = $(this).data('action');
+              loadxoql(csrf, server, xoql, action);
+          });
+
+          $("#id_form_run").submit( function(event) {
+              console.log($(this));
+              $('<input />').attr('type', 'hidden')
+                  .attr('name', "data")
+                  .attr('id', "id_data")
+                  .attr('value', JSON.stringify({data: hot1.getData()}))
+                  .appendTo(this);
+              $('<input />').attr('type', 'hidden')
+                  .attr('name', "column_headers")
+                  .attr('id', "id_column_headers")
+                  .attr('value', hot1.getColHeader())
+                  .appendTo(this);
+
+              return true;
+          });
+
+
+          $('.textarea-xml').each(function (index, elem) {
+              CodeMirror.fromTextArea(elem, {
+                  lineWrapping: false,
+                  mode: "xml",
+                  htmlMode: true,
+
+                  lineNumbers: true,
+              });
+          });
+
+
+
+
+
+
+      });
+
+
+  </script>
+
+
+{% endblock %}
