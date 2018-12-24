@@ -97,11 +97,17 @@ class Attribute(models.Model):
         (CHILD, CHILD),
         (PARENT, PARENT),
     )
+
+    DISPLAY_ONLY = 'Display'
+    LOADER_XML = 'Export'
+    INCLUDE_CHOICES = ((DISPLAY_ONLY, 'Show in Display only'),
+                       (LOADER_XML, 'Display and include in Loader XML'),)
     loader = models.ForeignKey(Loader, on_delete=models.CASCADE)
     name = models.CharField(max_length=64, help_text='The name of the attribute (case sensitive)')
     type = models.CharField(max_length=64, help_text='Does this belong to the parent object or the child?', default=CHILD, choices=TYPE_CHOICES)
     sort = models.IntegerField(default=1, help_text='Numerical value to control the order of the fields')
     is_key = models.BooleanField(default=False, help_text='Select for a key field')
+    include_type = models.CharField(default=LOADER_XML, max_length=64, choices=INCLUDE_CHOICES, help_text='Controls if this is a display only field, or included in the loader.')
     alias_field = models.CharField(max_length=256, blank=True, null=True, help_text='If provided, will be used as the AliasField')
     slug = models.SlugField()
     active = models.BooleanField(default=True)

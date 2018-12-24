@@ -306,8 +306,8 @@ def loader_run(request, loader_slug=None):
         for idx, c in enumerate(ch.split(',')):
             columns[c] = idx
 
-        child_attributes = Attribute.objects.filter(loader=loader, active=True, type=Attribute.CHILD)
-        parent_attributes = Attribute.objects.filter(loader=loader, active=True, type=Attribute.PARENT, is_key=False)
+        child_attributes = Attribute.objects.filter(loader=loader, include_type=Attribute.LOADER_XML, active=True, type=Attribute.CHILD)
+        parent_attributes = Attribute.objects.filter(loader=loader, include_type=Attribute.LOADER_XML, active=True, type=Attribute.PARENT, is_key=False)
 
         process_xml = list()
         process_xml.append(f'<{loader.process} xmlns="http://elite.com/schemas/transaction/process/write/{loader.process}">')

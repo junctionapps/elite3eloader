@@ -60,7 +60,7 @@ class AttributeForm(ModelForm):
 
     class Meta:
         model = Attribute
-        fields = ['name', 'alias_field', 'is_key', 'type' ,'sort',]
+        fields = ['name', 'alias_field', 'is_key', 'type', 'include_type', 'sort',]
 
     def clean_name(self):
         cleaned_name = self.cleaned_data['name']
